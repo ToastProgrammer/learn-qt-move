@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "learn_qt_move"
+version = "0.1.0"
+description = "Project for practicing qt gui application moving a player object around an area"
+authors = ["BTozier <BenjaminATozier@gmail.com>"]
+readme = "README.md"
+packages = [{include = "learn_qt_move"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pyqt6 = "^6.6.1"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.2"
+pytest-mock = "^3.11.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
