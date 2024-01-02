@@ -13,6 +13,8 @@ from PyQt6.QtWidgets import QDial
 from PyQt6.QtGui import QPainter
 
 from learn_qt_move.LogTable import XY
+from learn_qt_move.LogTable import DataTableWidget
+from learn_qt_move.MoveButtons import MoveButtonsWidget
 
 
 class CharacterGridWindow(QMainWindow):
@@ -22,7 +24,8 @@ class CharacterGridWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Qt Move Application")
-        self.resize(100, 100, 400, 400)
+        self.buttons = MoveButtonsWidget()
+        self.setCentralWidget(self.buttons)
         
 
     def init_character_grid(self):
@@ -41,20 +44,6 @@ class CharacterGridWindow(QMainWindow):
 
         # Update the character position
         # self.update_character_position()
-
-    def setup_directional_buttons(self):
-        # Create directional buttons
-        directions = ["Up", "Down", "Left", "Right"]
-        button_layout = QVBoxLayout()
-
-        for direction in directions:
-            button = QPushButton(direction)
-            button.clicked.connect(lambda _, dir=direction: self.move_character(dir))
-            button_layout.addWidget(button)
-
-        # Add directional buttons to the main layout
-        self.layout.addLayout(button_layout)
-
 
 
 if __name__ == "__main__":
