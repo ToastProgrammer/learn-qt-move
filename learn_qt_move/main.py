@@ -12,11 +12,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtWidgets import QDial
 from PyQt6.QtGui import QPainter
 
-
-@dataclass
-class XY:
-    x: int
-    y: int
+from learn_qt_move.LogTable import XY
 
 
 class CharacterGridWindow(QMainWindow):
