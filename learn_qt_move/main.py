@@ -30,10 +30,10 @@ class CharacterGridWindow(QMainWindow):
 
     def init_character_grid(self):
         # Clear existing widgets in the grid layout
-        for i in reversed(range(self.grid_layout.count())):
-            widget = self.grid_layout.itemAt(i).widget()
-            self.grid_layout.removeWidget(widget)
-            widget.setParent(None)
+        # for i in reversed(range(self.grid_layout.count())):
+        #     widget = self.grid_layout.itemAt(i).widget()
+        #     self.grid_layout.removeWidget(widget)
+        #     widget.setParent(None)
 
         # Add character to the grid layout
         for i in range():
