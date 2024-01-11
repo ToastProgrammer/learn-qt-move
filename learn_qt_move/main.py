@@ -3,8 +3,8 @@ import sys
 from dataclasses import dataclass
 
 from PyQt6.QtWidgets import QVBoxLayout
-from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtWidgets import QGridLayout
+from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtWidgets import QTextEdit
 from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtWidgets import QApplication
@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import QDial
 from PyQt6.QtGui import QPainter
 
 from learn_qt_move.LogTable import XY
-from learn_qt_move.LogTable import DataTableWidget
+from learn_qt_move.MoveGridWidget import MoveGridWidget
 from learn_qt_move.MoveButtons import MoveButtonsWidget
 
 
@@ -23,28 +23,28 @@ class CharacterGridWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Initial Window properties
         self.setWindowTitle("Qt Move Application")
-        self.buttons = MoveButtonsWidget()
-        self.setCentralWidget(self.buttons)
+        self.resize(400, 400)
+
+        # Initialize main widget
+        self.grid_widget = MoveGridWidget()
+
+        # Define Layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.grid_widget)
         
+        self._finalize_layout(layout)
 
-    def init_character_grid(self):
-        # Clear existing widgets in the grid layout
-        # for i in reversed(range(self.grid_layout.count())):
-        #     widget = self.grid_layout.itemAt(i).widget()
-        #     self.grid_layout.removeWidget(widget)
-        #     widget.setParent(None)
 
-        # Add character to the grid layout
-        for i in range():
-            for j in range(5):
-                btn = QPushButton(" ")
-                btn.setFixedSize(40, 40)
-                self.grid_layout.addWidget(btn, i, j)
+    def _finalize_layout(self, layout) -> None:
+        """
+        """
+        container  = QWidget()
+        container.setLayout(layout)
 
-        # Update the character position
-        # self.update_character_position()
-
+        self.setCentralWidget(container)
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
