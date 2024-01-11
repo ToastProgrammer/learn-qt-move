@@ -11,21 +11,10 @@ from PyQt6.QtWidgets import QHeaderView
 from PyQt6.QtWidgets import QHBoxLayout
 from PyQt6.QtWidgets import QTableWidgetItem
 
+from common import XY
+
 
 # from: https://doc.qt.io/qtforpython-6/tutorials/expenses/expenses.html
-
-
-@dataclass
-class XY:
-    x: int
-    y: int
-
-    def __iter__(self):
-        yield self.x
-        yield self.y
-
-    def __repr__(self) -> str:
-        return(f"({self.x}, {self.y})")
 
 
 FILE_TABS = ["Open", "New Tab", "Close Tab"]
