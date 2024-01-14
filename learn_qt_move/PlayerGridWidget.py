@@ -19,31 +19,35 @@ from PyQt6.QtCore import QSize
 
 from common import PEN_BLACK_MEDIUM
 from common import BRUSH_BLUE_SOLID
-from common import DEFAULT_GRID_SIZE, DEFAULT_CANVAS_RECT
+
+
+DEFAULT_GRID_SIZE_RECT = QRect(20, 20, 300, 300)
+DEFAULT_GRID_WIDGET_SIZE = QSize(340, 380)
 
 
 class PlayerGridWidget(QWidget):
     """
     """
     
-    canvas_size: QRect
-    grid_size: QRect
-    num_cells: QSize
+    widget_size: QRect  # Size of the widget; grid + borders
+    grid_area: QRect    # Area where the grid is drawn
     
-    def __init__(self, num_cells: QSize = QSize(5,5), canvas_size: Optional[QSize] = None, grid_size: Optional[QSize] = None):
+    num_cells: QSize    # Number of discrete spaces in the grid
+    
+    def __init__(self, num_cells: QSize = QSize(5,5), widget_size: Optional[QSize] = None, grid_size: Optional[QSize] = None):
         super().__init__()
         
         try:
-            self.resize(*canvas_size)
-            self.canvas_size = canvas_size
+            self.resize(*widget_size)
+            self.widget_size = widget_size
         except(TypeError):
-            self.resize(DEFAULT_GRID_SIZE)
-            self.canvas_size = DEFAULT_CANVAS_RECT
+            self.resize(DEFAULT_GRID_WIDGET_SIZE)
+            self.widget_size = DEFAULT_GRID_SIZE_RECT
         
-        self.grid_size = grid_size if grid_size and grid_size < self.canvas_size else self.canvas_size
+        self.grid_area = grid_size if grid_size and grid_size < self.widget_size else self.widget_size
         self.num_cells = num_cells 
         
-        self.update()
+        self.update()   # Trigger repaint
 
 
     def paintEvent(self, event: QPaintEvent):
@@ -52,24 +56,25 @@ class PlayerGridWidget(QWidget):
         painter.setBrush(QBrush(*BRUSH_BLUE_SOLID))
         
         # Draw Background
-        painter.drawRect(self.canvas_size)
+        painter.drawRect(self.widget_size)
         
-        # Draw Column lines
+        # Draw Vertical lines for columns
         for h in range(1,self.num_cells.width()):
-            pos = self.grid_size.width() // self.num_cells.width() * h
-            painter.drawLines(
-                QPoint(pos, self.grid_size.top()), 
-                QPoint(pos, self.grid_size.bottom())
+            pos = self.grid_area.width() // self.num_cells.width() * h 
+            painter.drawLine(
+                QPoint(pos, self.grid_area.top()),      # (x,y)
+                QPoint(pos, self.grid_area.bottom())    # (dx,dy)
                 )
             
-            
-        # Draw Row lines
+        # Draw Horizontal lines for Rows
         for v in range(1,self.num_cells.height()):
-            pos = self.grid_size.height() // self.num_cells.height() * v
-            painter.drawLines(
-                QPoint(self.grid_size.left(), pos), 
-                QPoint(self.grid_size.right(), pos)
+            pos = self.grid_area.height() // self.num_cells.height() * v
+            painter.drawLine(
+                QPoint(self.grid_area.left(), pos), 
+                QPoint(self.grid_area.right(), pos)
                 )
+        
+    
             
 
 if __name__ == "__main__":

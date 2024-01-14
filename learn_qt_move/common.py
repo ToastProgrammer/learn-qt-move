@@ -54,10 +54,6 @@ class BrushConfig:
         yield self.style
 
 
-DEFAULT_GRID_SIZE = QSize(340, 380)
-
-DEFAULT_CANVAS_RECT = QRect(20, 20, 300, 300)
-
 # QPen Configurations
 PEN_BLACK_MEDIUM = PenConfig(Qt.GlobalColor.black, 5, Qt.PenStyle.SolidLine)
 
