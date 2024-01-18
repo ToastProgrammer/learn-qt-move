@@ -1,17 +1,21 @@
 """
 """
 from dataclasses import dataclass
+from contextlib import contextmanager
 from functools import cache
 from typing import Optional
+from typing import List
+from typing import Tuple
 
-from PyQt6.QtCore import QLine, QPoint, QRect, QSize, Qt
+from PyQt6.QtCore import QLine, QPoint, QRect, QSize, Qt, QMargins
 from PyQt6.QtGui import QBrush, QPainter, QPaintEvent, QPen
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtWidgets import QVBoxLayout
 
 
 from common import XY
-from common import BRUSH_BLUE_SOLID, PEN_BLACK_MEDIUM
+from common import BRUSH_BLU_SLD, PEN_BLA_MED, PEN_GRY_SML
+from PainterUtils import draw_grid
 
 
 DEFAULT_GRID_AREA = QRect(20, 20, 300, 300)
@@ -31,9 +35,8 @@ class PlayerGridWidget(QWidget):
         ):
         super().__init__()
         
-        self.setGeometry(grid_area)
+        self.setGeometry(grid_area.marginsAdded(QMargins(30,10,30,60)))
         self.grid_area = grid_area
-        
         self.num_cells = num_cells 
         
         self.update()   # Trigger repaint
@@ -42,43 +45,16 @@ class PlayerGridWidget(QWidget):
     def paintEvent(self, event: QPaintEvent):
         painter = QPainter(self)
         
-        draw_grid(painter, self.grid_area, self.num_cells, PEN_BLACK_MEDIUM, offset=XY(10,10), brush_style=BRUSH_BLUE_SOLID)
+        # TODO: Move save/restore to context manager
+        painter.save()
         
-            
-def draw_grid(
-    painter: QPainter,
-    area: QRect,
-    num_cells: XY,
-    pen_style: QPen,
-    offset: XY = XY(0,0),
-    brush_style: Optional[QBrush] = None,
-    ) -> None:
-
-    painter.setPen(QPen(*pen_style))
-    
-    # Set coordinates relative to grid area instead of the widget
-    painter.translate(area.topLeft())
-    
-    # Draw Background
-    if brush_style:
-        painter.setBrush(QBrush(*brush_style))
-        painter.drawRect(area)
-    
-    # Draw Vertical Lines for Columns
-    for h in range(1,num_cells.x):
-        pos = area.width() // num_cells.x * h + area.left() + offset.x
-        painter.drawLine(
-            QPoint(pos, area.top()),    # (x,y)
-            QPoint(pos, area.bottom())  # (dx,dy)
-            )
-            
-    # Draw Horizontal lines for Rows
-    for v in range(1,num_cells.y):
-        pos = area.height() // num_cells.y * v + area.top() + offset.y
-        painter.drawLine(
-            QPoint(area.left(), pos), 
-            QPoint(area.right(), pos)
-            )
+        # Set coordinates relative to grid area instead of the widget
+        painter.translate(self.grid_area.topLeft())
+        
+        draw_grid(painter, self.grid_area, self.num_cells, PEN_BLA_MED, brush_style=BRUSH_BLU_SLD)
+        draw_grid(painter, self.grid_area, self.num_cells, PEN_GRY_SML, offset=XY(2,2))
+        
+        painter.restore()
             
     
 def size_fits_in_rect(size: QSize, rect: QRect):

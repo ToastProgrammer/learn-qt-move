@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from PyQt6.QtCore import Qt
 from PyQt6.QtCore import QSize
 from PyQt6.QtCore import QRect
+from PyQt6.QtGui import QColor
 
 
 @dataclass
@@ -28,7 +29,7 @@ class XY:
         return self.x > rhs.x and self.y > rhs.y
     
     def __eq__(self, rhs: XY):
-        return self.x == rhs.x and self.y == rhs.y
+        return self.x == rhs.x and self.y == rhs.y    
     
 
 @dataclass(frozen=True)
@@ -55,7 +56,8 @@ class BrushConfig:
 
 
 # QPen Configurations
-PEN_BLACK_MEDIUM = PenConfig(Qt.GlobalColor.black, 5, Qt.PenStyle.SolidLine)
+PEN_BLA_MED = PenConfig(Qt.GlobalColor.black, 5, Qt.PenStyle.SolidLine)
+PEN_GRY_SML = PenConfig(QColor(170, 181,198), 2, Qt.PenStyle.SolidLine)
 
 # QBrush Configurations
-BRUSH_BLUE_SOLID = BrushConfig(Qt.GlobalColor.cyan, Qt.BrushStyle.SolidPattern)
+BRUSH_BLU_SLD = BrushConfig(Qt.GlobalColor.cyan, Qt.BrushStyle.SolidPattern)
