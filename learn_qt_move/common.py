@@ -55,9 +55,14 @@ class BrushConfig:
         yield self.style
 
 
+class GridInvalidError(ValueError):
+    pass
+
+
 # QPen Configurations
 PEN_BLA_MED = PenConfig(Qt.GlobalColor.black, 5, Qt.PenStyle.SolidLine)
 PEN_GRY_SML = PenConfig(QColor(170, 181,198), 2, Qt.PenStyle.SolidLine)
 
 # QBrush Configurations
 BRUSH_BLU_SLD = BrushConfig(Qt.GlobalColor.cyan, Qt.BrushStyle.SolidPattern)
+BRUSH_RED_SLD = BrushConfig(Qt.GlobalColor.red, Qt.BrushStyle.SolidPattern)
