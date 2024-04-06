@@ -12,6 +12,11 @@ from common import PenConfig, BrushConfig
 from common import XY
 
 
+class OutOfBoundsError(Exception):
+    def __init__(self, coord: XY, area: XY, *args) -> None:
+        super().__init__(f"Tried to place object at {coord} outside of area {area}", *args)
+
+
 @contextmanager
 def qpainter_config(painter: QPainter):
     painter.save()
