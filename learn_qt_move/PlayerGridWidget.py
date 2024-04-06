@@ -21,6 +21,7 @@ from common import XY
 from common import BRUSH_BLU_SLD, BRUSH_RED_SLD, PEN_BLA_MED, PEN_GRY_SML
 from common import GridInvalidError
 
+from PainterUtils import OutOfBoundsError
 from PainterUtils import draw_grid
 
 
@@ -35,7 +36,9 @@ class DrawGridWidget(QWidget):
     grid_num_cells: XY       # Number of discrete spaces in the grid
     grid_area: QRect    # Size of area where the grid is drawn
     grid_pixmap: QPixmap
-    grid_details: Tuple[XY, Tuple[QPoint, ...]]
+    _space_size: XY
+    _space_x_coords: list[int]
+    _space_y_coords: list[int]
     player_index: Optional[XY] = None
     
     
@@ -62,7 +65,7 @@ class DrawGridWidget(QWidget):
             # Set coordinates relative to grid area instead of the widget
             painter.translate(self.grid_area.topLeft())
             
-            self.grid_details = draw_grid(painter, self.grid_area, self.grid_num_cells, PEN_BLA_MED, brush_style=BRUSH_BLU_SLD)
+            self._space_size, self._space_x_coords, self._space_y_coords = draw_grid(painter, self.grid_area, self.grid_num_cells, PEN_BLA_MED, brush_style=BRUSH_BLU_SLD)
             # Add shading detailing to grid
             draw_grid(painter, self.grid_area, self.grid_num_cells, PEN_GRY_SML, offset=XY(2,2))
             
@@ -70,28 +73,30 @@ class DrawGridWidget(QWidget):
             painter.restore()
         painter.end()
             
-        if not self.grid_details:
-            raise GridInvalidError("An error occured when trying to draw the g rid, as no space indices were defined.")
+        if not self._space_x_coords or not self._space_y_coords:
+            raise GridInvalidError("An error occured when trying to draw the grid, as no space indices were defined.")
         
     def get_pixmap(self) -> QPixmap:
         return self.grid_pixmap
     
-    def get_grid_space_details(self) -> tuple[XY, list[int], list[int]]:
-        """
-        Get the characteristics of the generated grid.
+    def get_grid_space_size(self) -> XY:
+        """Get the characteristics of the generated grid.
 
         Returns:
-            tuple[XY, list[int], list[int]]: The dimensions of a square in the grid, and each x and y position of a line in the grid.
+            XY: The dimensions of a square in the grid.
         """
-        return self.grid_details
-        
+        return self._space_size
+    
+    def get_space_coords(self, coords: XY) -> XY:
+        """Get the XY location of specified space in grid.
 
-class DrawPlayerWidget(QGraphicsEllipseItem):
-    
-    pos: QPoint
-    
-    def __init__(self, ellipse: QRectF = QRectF(0, 0, 0 , 0)):
-        super().__init__(ellipse)
+        Args:
+            coords (XY): location on grid to get coordinates
+
+        Returns:
+            XY: xy location of input coordinates on grid
+        """
+        return (self._space_x_coords[coords.x], self._space_x_coords[coords.x])
 
 
 class PlayerGridWidget(QGraphicsView):
@@ -100,8 +105,6 @@ class PlayerGridWidget(QGraphicsView):
     draw_grid_widget: DrawGridWidget
     player_item: QGraphicsEllipseItem | None
     grid_item: QPixmap
-    
-    grid_space_coords: tuple
     
     def __init__(
         self,
@@ -126,28 +129,26 @@ class PlayerGridWidget(QGraphicsView):
         
         if self.player_item:
             if (
-                coord.x + self.player_item.rect().width() > self.geometry().x or 
-                coord.y + self.player_item.rect().height() > self.geometry().y
+                self.player_item.rect().width() + coord.x > self.geometry().x or 
+                self.player_item.rect().height() + coord.y > self.geometry().y
                 ):
-                print(
-                    f"Could not move player to ({coord.x}, {coord.y}) as it is outside the boundary"
-                    f"({self.geometry().x}, {self.geometry().y})"
-                    )
+                raise OutOfBoundsError(coord, XY(self.geometry().x, self.geometry().y))
             else:
                 self.player_item.setPos(coord.x, coord.y)
         else:
-            self.player_item = self.scene_widget.addEllipse(coord.x, coord.y, self.draw_grid_widget.grid_details[0].x, self.draw_grid_widget.grid_details[0].y, QPen(*PEN_GRY_SML), QBrush(*BRUSH_RED_SLD))
+            _player_size = self.draw_grid_widget.get_grid_space_size()
+            self.player_item = self.scene_widget.addEllipse(
+                coord.x,
+                coord.y,
+                _player_size.x,
+                _player_size.y,
+                QPen(*PEN_GRY_SML),
+                QBrush(*BRUSH_RED_SLD)
+                )
             
-    def move_player_by(self, vec: XY):
-        if not self.player_item:
-            print(f"Could not move player by {vec} as no player was created.")
-        else:
-            self.move_player(self.player_item.x + vec.x, self.player_item.y + vec.y)
-            
-    # def move_to_space(self, space: XY):
+    # def move_player_space(self, space: XY):
         
-            
-    
+                    
 def size_fits_in_rect(size: QSize, rect: QRect):
     return size.width() <= rect.width() and size.height() <= rect.height()
             
