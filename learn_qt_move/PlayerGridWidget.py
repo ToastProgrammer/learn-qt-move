@@ -10,7 +10,7 @@ from typing import List
 from typing import Tuple
 from typing import Collection
 
-from PyQt6.QtCore import QLine, QPoint, QRect, QRectF, QSize, Qt, QMargins
+from PyQt6.QtCore import QLine, QPoint, QRect, QRectF, QSize, Qt, QMargins, QPointF
 from PyQt6.QtGui import QBrush, QPainter, QPaintEvent, QPen, QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem
@@ -39,6 +39,7 @@ class DrawGridWidget(QWidget):
     _space_size: XY
     _space_x_coords: list[int]
     _space_y_coords: list[int]
+    space_coords: list[list[XY]]
     player_index: Optional[XY] = None
     
     
@@ -124,37 +125,30 @@ class PlayerGridWidget(QGraphicsView):
         
         self.grid_item = self.scene_widget.addPixmap(self.draw_grid_widget.get_pixmap())
     
-    def move_player(self, coord: XY):
+    def move_player(self, coord: QPoint):
         
         if self.player_item:
-            if (
-                self.player_item.rect().width() + coord.x > self.geometry().x or 
-                self.player_item.rect().height() + coord.y > self.geometry().y
-                ):
-                raise OutOfBoundsError(coord, XY(self.geometry().x, self.geometry().y))
+            if not self.geometry().contains(QRect(QPoint(coord), self.player_item.rect().size().toSize())):
+                raise OutOfBoundsError(coord, XY(self.geometry().x(), self.geometry().y()))
             else:
-                self.player_item.setPos(coord.x, coord.y)
+                self.player_item.setPos(coord.x(), coord.y())
         else:
             _player_size = self.draw_grid_widget.get_grid_space_size()
             self.player_item = self.scene_widget.addEllipse(
-                coord.x,
-                coord.y,
-                _player_size.x,
+                coord.x(),
+                coord.y(),
+                _player_size.x, 
                 _player_size.y,
                 QPen(*PEN_GRY_SML),
                 QBrush(*BRUSH_RED_SLD)
                 )
             
     # def move_player_space(self, space: XY):
-        
-                    
-def size_fits_in_rect(size: QSize, rect: QRect):
-    return size.width() <= rect.width() and size.height() <= rect.height()
-            
+    
 
 if __name__ == "__main__":
     app = QApplication([])
     window = PlayerGridWidget()
     window.show()
-    window.move_player(XY(0, 0))
+    window.move_player(QPoint(0, 0))
     app.exec()
