@@ -14,6 +14,12 @@ from PyQt6.QtGui import QColor
 class XY:
     x: int
     y: int
+    
+    def __add__(self, rhs: XY):
+        return XY(self.x + rhs.x, self.y + rhs.y)
+    
+    def __sub__(self, rhs: XY):
+        return XY(self.x - rhs.x, self.y - rhs.y)
 
     def __iter__(self):
         yield self.x
@@ -29,7 +35,13 @@ class XY:
         return self.x > rhs.x and self.y > rhs.y
     
     def __eq__(self, rhs: XY):
-        return self.x == rhs.x and self.y == rhs.y    
+        return self.x == rhs.x and self.y == rhs.y
+    
+    def __le__(self, rhs: XY):
+        return self.x <= rhs.x and self.y <= rhs.y
+    
+    def __ge__(self, rhs: XY):
+        return self.x >= rhs.x and self.y >= rhs.y
     
 
 @dataclass(frozen=True)

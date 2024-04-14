@@ -11,6 +11,7 @@ from typing import Tuple
 from typing import Collection
 
 from PyQt6.QtCore import QLine, QPoint, QRect, QRectF, QSize, Qt, QMargins, QPointF
+from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtGui import QBrush, QPainter, QPaintEvent, QPen, QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem
@@ -97,15 +98,24 @@ class DrawGridWidget(QWidget):
         Returns:
             XY: xy location of input coordinates on grid
         """
-        return (self._space_x_coords[coords.x], self._space_x_coords[coords.x])
+        return (self._space_x_coords[coords.x], self._space_y_coords[coords.y])
 
 
 class PlayerGridWidget(QGraphicsView):
     
+    
+    debug_msg_signal: pyqtSignal = pyqtSignal(str)
+    
     scene_widget: QGraphicsScene
     draw_grid_widget: DrawGridWidget
-    player_item: QGraphicsEllipseItem | None = None
+    
     grid_item: QPixmap
+    player_item: QGraphicsEllipseItem | None = None
+    
+    cur_player_space: XY
+    
+    def eprint(self, msg: str):
+        self.debug_msg_signal.emit(msg)
     
     def __init__(
         self,
@@ -114,24 +124,30 @@ class PlayerGridWidget(QGraphicsView):
         ):
         super().__init__()
         
+        # Signals
+        # self.debug_msg_signal = pyqtSignal(str)
+        
+        # Geometry
         self.setGeometry(grid_area.marginsAdded(QMargins(30,10,30,60)))
         
         # Create widgets for drawing on to scene
         self.draw_grid_widget = DrawGridWidget(num_cells, grid_area)
-        
-        # Create and set scene
         self.scene_widget = QGraphicsScene(self)
         self.setScene(self.scene_widget)
         
         self.grid_item = self.scene_widget.addPixmap(self.draw_grid_widget.get_pixmap())
+        # Initial conditions
+        self.move_player_to_space(XY(0,0))
     
     def move_player(self, coord: QPoint):
-        
+        self.eprint(f"Coord: {coord}")
+        self.eprint(f"Geometry: {self.geometry()}")
+        _translated = coord + self.geometry().topLeft()
         if self.player_item:
-            if not self.geometry().contains(QRect(QPoint(coord), self.player_item.rect().size().toSize())):
-                raise OutOfBoundsError(coord, XY(self.geometry().x(), self.geometry().y()))
+            if not self.geometry().contains(_translated):
+                raise OutOfBoundsError(_translated, XY(self.geometry().x(), self.geometry().y()))
             else:
-                self.player_item.setPos(coord.x(), coord.y())
+                self.player_item.setPos(coord.toPointF())
         else:
             _player_size = self.draw_grid_widget.get_grid_space_size()
             self.player_item = self.scene_widget.addEllipse(
@@ -142,13 +158,42 @@ class PlayerGridWidget(QGraphicsView):
                 QPen(*PEN_GRY_SML),
                 QBrush(*BRUSH_RED_SLD)
                 )
+             
+    def move_player_to_space(self, space: XY):
+        
+        self.eprint(f"- Moving player to space: {space}")
+        try:
+            self.move_player(QPoint(*self.draw_grid_widget.get_space_coords(space)))
+            self.eprint(f"MOVED to space: {space}")
             
-    # def move_player_space(self, space: XY):
+        except (OutOfBoundsError, IndexError):
+            self.eprint(f"COULD NOT move to space: {space}")
+            
+        else:
+            self.cur_player_space = space
+        
+    def move_player_by_space(self, dir: str):
+        _move = XY(0,0)
+        if dir == "up":
+           _move.y -= 1
+        elif dir == "down":
+            _move.y += 1
+        elif dir == "left":
+            _move.x -= 1
+        elif dir == "right":
+            _move.x += 1
+        
+        self.debug_msg_signal.emit(f"Moving player {dir} - {_move}")
+        self.move_player_to_space(self.cur_player_space + _move)
+        
+        self.debug_msg_signal.emit("\n\n")
+        
+        
     
 
 if __name__ == "__main__":
     app = QApplication([])
     window = PlayerGridWidget()
     window.show()
-    window.move_player(QPoint(0, 0))
+    window.move_player_to_space(XY(0, 0))
     app.exec()

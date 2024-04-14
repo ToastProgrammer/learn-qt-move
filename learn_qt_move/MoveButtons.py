@@ -19,6 +19,7 @@ class MoveButtonsWidget(QWidget):
         _left = QPushButton("<")
         _right = QPushButton(">")
 
+        # Need to connect lambda to pass pyqtSignal as argument, otherwise passes `None`
         _up.clicked.connect(lambda: self.button_press.emit("up"))
         _down.clicked.connect(lambda: self.button_press.emit("down"))
         _left.clicked.connect(lambda: self.button_press.emit("left"))

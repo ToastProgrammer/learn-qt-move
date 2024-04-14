@@ -68,7 +68,7 @@ def draw_grid(
         
         # Draw Vertical Lines for Columns
         h_len = area.width() // num_cells.x
-        for h in range(1,num_cells.x):
+        for h in range(0,num_cells.x):
             pos = h_len * h + area.left() + offset.x
             x_pos.append(pos)
             painter.drawLine(
@@ -78,7 +78,7 @@ def draw_grid(
                 
         # Draw Horizontal lines for Rows
         v_len = area.height() // num_cells.y
-        for v in range(1,num_cells.y):
+        for v in range(0,num_cells.y):
             pos = v_len * v + area.top() + offset.y
             y_pos.append(pos)
             painter.drawLine(
