@@ -2,21 +2,13 @@
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from contextlib import contextmanager
-from functools import cache
 from typing import Optional
-from typing import List
-from typing import Tuple
-from typing import Collection
 
-from PyQt6.QtCore import QLine, QPoint, QRect, QRectF, QSize, Qt, QMargins, QPointF
-from PyQt6.QtCore import QObject, pyqtSignal
-from PyQt6.QtGui import QBrush, QPainter, QPaintEvent, QPen, QPixmap
+from PyQt6.QtCore import QPoint, QRect, QSize, QMargins
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QBrush, QPainter, QPen, QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem
-from PyQt6.QtWidgets import QVBoxLayout
-
 
 from common import XY
 from common import BRUSH_BLU_SLD, BRUSH_RED_SLD, PEN_BLA_MED, PEN_GRY_SML
@@ -188,8 +180,6 @@ class PlayerGridWidget(QGraphicsView):
         
         self.debug_msg_signal.emit("\n\n")
         
-        
-    
 
 if __name__ == "__main__":
     app = QApplication([])

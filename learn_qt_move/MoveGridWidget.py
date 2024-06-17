@@ -1,14 +1,11 @@
-import sys
 import logging
 from MoveButtons import MoveButtonsWidget
 from PlayerGridWidget import PlayerGridWidget
 
-
-from PyQt6.QtWidgets import QMainWindow
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtWidgets import QVBoxLayout
-from PyQt6.QtCore import pyqtSignal, pyqtSlot
+from PyQt6.QtCore import pyqtSlot
 
 
 class MoveGridWidget(QWidget):

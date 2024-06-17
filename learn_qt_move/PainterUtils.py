@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from typing import Tuple, List, Optional, Union
 
-from PyQt6.QtCore import QLine, QPoint, QRect, QSize, Qt, QMargins
-from PyQt6.QtGui import QBrush, QPainter, QPaintEvent, QPen, QPixmap
-from PyQt6.QtWidgets import QApplication, QWidget
-from PyQt6.QtWidgets import QVBoxLayout
+from PyQt6.QtCore import QPoint, QRect, Qt
+from PyQt6.QtGui import QBrush, QPainter, QPen, QPixmap
 
-from common import PenConfig, BrushConfig
 from common import XY
 
 

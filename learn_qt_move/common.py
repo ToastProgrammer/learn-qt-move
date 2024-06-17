@@ -5,8 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtCore import QSize
-from PyQt6.QtCore import QRect
 from PyQt6.QtGui import QColor
 
 
