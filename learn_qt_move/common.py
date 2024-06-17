@@ -12,10 +12,10 @@ from PyQt6.QtGui import QColor
 class XY:
     x: int
     y: int
-    
+
     def __add__(self, rhs: XY):
         return XY(self.x + rhs.x, self.y + rhs.y)
-    
+
     def __sub__(self, rhs: XY):
         return XY(self.x - rhs.x, self.y - rhs.y)
 
@@ -25,22 +25,22 @@ class XY:
 
     def __repr__(self) -> str:
         return(f"({self.x}, {self.y})")
-    
+
     def __lt__(self, rhs: XY):
         return self.x < rhs.x and self.y < rhs.y
-    
+
     def __gt__(self, rhs: XY):
         return self.x > rhs.x and self.y > rhs.y
-    
+
     def __eq__(self, rhs: XY):
         return self.x == rhs.x and self.y == rhs.y
-    
+
     def __le__(self, rhs: XY):
         return self.x <= rhs.x and self.y <= rhs.y
-    
+
     def __ge__(self, rhs: XY):
         return self.x >= rhs.x and self.y >= rhs.y
-    
+
 
 @dataclass(frozen=True)
 class PenConfig:

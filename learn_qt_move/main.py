@@ -33,7 +33,7 @@ class CharacterGridWindow(QMainWindow):
         # Define Layout
         layout = QVBoxLayout()
         layout.addWidget(self.grid_widget)
-        
+
         self._finalize_layout(layout)
 
 
@@ -44,7 +44,7 @@ class CharacterGridWindow(QMainWindow):
         container.setLayout(layout)
 
         self.setCentralWidget(container)
-        
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

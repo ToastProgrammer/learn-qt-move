@@ -12,18 +12,18 @@ class MoveGridWidget(QWidget):
     m_buttons: MoveButtonsWidget
     m_grid: PlayerGridWidget
     logger: logging.Logger
-    
+
     def __init__(self, log_level: int = logging.ERROR):
         super().__init__()
-        
+
         # Child Widgets
         self.m_buttons = MoveButtonsWidget()
         self.m_grid = PlayerGridWidget()
-        
+
         # Signals
         self.m_buttons.button_press.connect(self.handle_button_press)
         self.m_grid.debug_msg_signal.connect(self.debug_msg)
-        
+
         # Layout
         layout = QVBoxLayout()
         layout.addWidget(self.m_grid)
@@ -38,11 +38,11 @@ class MoveGridWidget(QWidget):
         _handler.setFormatter(_formatter)
         self.logger.addHandler(_handler)
         self.logger.setLevel(log_level)
-        
+
     @pyqtSlot(str)
     def handle_button_press(self, direction: str):
         self.m_grid.move_player_by_space(direction)
-        
+
     @pyqtSlot(str)
     def debug_msg(self, message: str):
         self.logger.debug(message)

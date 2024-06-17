@@ -27,7 +27,7 @@ TEST_DATA = [
 
 class DataTableWidget(QWidget):
     """
-    
+
     """
     table_size: int = 0
     stored_data: Optional[Collection]
@@ -38,10 +38,10 @@ class DataTableWidget(QWidget):
             headers: Collection[str] = ["Event", "Description"]
             ):
         super().__init__()
-        
+
         # Example data
         self.stored_data = data
-            
+
         # Table
         self.table = QTableWidget()
         self.table.setColumnCount(2)
@@ -75,7 +75,7 @@ class MoveSpaceWindow(QMainWindow):
         self.setWindowTitle("Multi-Tab Window")
         self.resize(800, 600)
 
-        
+
         self.setCentralWidget(self.data_table)
 
 
@@ -89,4 +89,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

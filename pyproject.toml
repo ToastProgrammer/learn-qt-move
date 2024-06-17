@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Project for practicing qt gui application moving a player object around an area"
 authors = ["BTozier <BenjaminATozier@gmail.com>"]
 readme = "README.md"
-packages = [{include = "learn_qt_move"}] 
+packages = [{include = "learn_qt_move"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"

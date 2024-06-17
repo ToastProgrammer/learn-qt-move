@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QGridLayout 
+from PyQt6.QtWidgets import QGridLayout
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtWidgets import QPushButton
 from PyQt6.QtCore import pyqtSignal
@@ -23,7 +23,7 @@ class MoveButtonsWidget(QWidget):
         _down.clicked.connect(lambda: self.button_press.emit("down"))
         _left.clicked.connect(lambda: self.button_press.emit("left"))
         _right.clicked.connect(lambda: self.button_press.emit("right"))
-        
+
         self.layout = QGridLayout()
         self.layout.addWidget(_up, 0, 1)
         self.layout.addWidget(_down, 2, 1)
